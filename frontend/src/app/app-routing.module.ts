@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CustomizerComponent } from './pages/customizer/customizer.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: 'main', component: CustomizerComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
