@@ -70,3 +70,26 @@ pub async fn get_weapons_by_slot(
         _ => Err(Status::ServiceUnavailable),
     }
 }
+
+#[get("/weapons?<slot>&<class>")]
+pub async fn get_weapons_by_class_and_slot(
+    connection: &State<Client>,
+    slot: Option<i32>,
+    class: Option<String>,
+) -> Result<Json<Vec<Weapon>>, Status> {
+    let weapons: Collection<Weapon> = connection
+        .database("TF2-Custom-Weapon-Helper")
+        .collection("Weapons");
+    let filter = doc! {
+        "slot": slot,
+        "user": class,
+    };
+    let find = weapons.find(filter, None).await;
+    match find {
+        Ok(cursor) => match cursor.try_collect::<Vec<Weapon>>().await {
+            Ok(list) => Ok(Json(list)),
+            _ => Err(Status::InternalServerError),
+        },
+        _ => Err(Status::ServiceUnavailable),
+    }
+}
