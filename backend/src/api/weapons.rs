@@ -6,26 +6,60 @@ use crate::data::model::Weapon;
 
 #[get("/weapon?<index>")]
 pub async fn get_weapon(connection: &State<Client>, index: i32) -> Result<Json<Weapon>, Status> {
-    let weapons: Collection<Weapon> = connection.database("testing").collection("Weapons");
+    let weapons: Collection<Weapon> = connection
+        .database("TF2-Custom-Weapon-Helper")
+        .collection("Weapons");
     let filter = doc! {
         "index": index,
     };
     let find = weapons.find_one(filter, None).await;
     match find {
         Ok(Some(result)) => Ok(Json(result)),
-        Ok(_) => Err(Status::NoContent),
-        _ => Err(Status::ServiceUnavailable),
+        Ok(None) => Err(Status::NoContent),
+        Err(error) => {
+            debug!("Error: {}", error);
+            Err(Status::ServiceUnavailable)
+        }
     }
 }
 
-#[get("/weapons?<class>")]
+#[get("/weapons/user/<class>")]
 pub async fn get_weapons_by_class(
     connection: &State<Client>,
     class: String,
 ) -> Result<Json<Vec<Weapon>>, Status> {
-    let weapons: Collection<Weapon> = connection.database("testing").collection("Weapons");
+    let weapons: Collection<Weapon> = connection
+        .database("TF2-Custom-Weapon-Helper")
+        .collection("Weapons");
     let filter = doc! {
         "user": class,
+    };
+    let find = weapons.find(filter, None).await;
+    match find {
+        Ok(cursor) => match cursor.try_collect::<Vec<Weapon>>().await {
+            Ok(list) => Ok(Json(list)),
+            Err(error) => {
+                debug!("Error: {}", error);
+                Err(Status::InternalServerError)
+            }
+        },
+        Err(error) => {
+            debug!("Error: {}", error);
+            Err(Status::ServiceUnavailable)
+        }
+    }
+}
+
+#[get("/weapons/slot/<slot>")]
+pub async fn get_weapons_by_slot(
+    connection: &State<Client>,
+    slot: i32,
+) -> Result<Json<Vec<Weapon>>, Status> {
+    let weapons: Collection<Weapon> = connection
+        .database("TF2-Custom-Weapon-Helper")
+        .collection("Weapons");
+    let filter = doc! {
+        "slot": slot,
     };
     let find = weapons.find(filter, None).await;
     match find {
@@ -37,14 +71,18 @@ pub async fn get_weapons_by_class(
     }
 }
 
-#[get("/weapons?<slot>")]
-pub async fn get_weapons_by_slot(
+#[get("/weapons?<slot>&<class>")]
+pub async fn get_weapons_by_class_and_slot(
     connection: &State<Client>,
-    slot: i32,
+    slot: Option<i32>,
+    class: Option<String>,
 ) -> Result<Json<Vec<Weapon>>, Status> {
-    let weapons: Collection<Weapon> = connection.database("testing").collection("Weapons");
+    let weapons: Collection<Weapon> = connection
+        .database("TF2-Custom-Weapon-Helper")
+        .collection("Weapons");
     let filter = doc! {
         "slot": slot,
+        "user": class,
     };
     let find = weapons.find(filter, None).await;
     match find {

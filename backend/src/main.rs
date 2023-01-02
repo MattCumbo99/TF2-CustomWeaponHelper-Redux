@@ -18,7 +18,12 @@ async fn main() {
         .mount("/", routes![])
         .mount(
             "/api",
-            routes![api::weapons::get_weapon, api::weapons::get_weapons_by_class],
+            routes![
+                api::weapons::get_weapon,
+                api::weapons::get_weapons_by_class,
+                api::weapons::get_weapons_by_slot,
+                api::weapons::get_weapons_by_class_and_slot,
+            ],
         )
         .manage(connection)
         .launch()
