@@ -9,6 +9,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatAutocompleteModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
