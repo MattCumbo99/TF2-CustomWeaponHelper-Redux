@@ -1,12 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customizer</title>
+  <meta charset="UTF-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Customizer</title>
 </head>
 <body>
-    <p>Customizer works!</p>
+  <h1>TF2 Weapon Helper</h1>
+  <p>Input your desired weapon information and watch it generate its PHP code below.</p>
+  <!-- Basic form input for weapon -->
+  <form>
+    <div>
+      <mat-form-field>
+        <mat-label>Weapon Name</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Weapon Class</mat-label>
+        <input matInput placeholder="tf_weapon_scattergun">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Index</mat-label>
+        <input matInput type="number">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Slot</mat-label>
+        <input matInput min="0" type="number">
+      </mat-form-field>
+    </div>
+    <div>
+      <!-- Sample button -->
+      <button mat-raised-button type="button">Generate</button>
+    </div>
+    <div>
+      <!-- PHP code results -->
+      <mat-form-field class="php-output" >
+        <mat-label>Result</mat-label>
+        <textarea matInput disabled></textarea>
+      </mat-form-field>
+    </div>
+  </form>
 </body>
 </html>
