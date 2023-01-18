@@ -20,8 +20,6 @@ async fn main() {
             "/api",
             routes![
                 api::weapons::get_weapon,
-                api::weapons::get_weapons_by_class,
-                api::weapons::get_weapons_by_slot,
                 api::weapons::get_weapons_by_class_and_slot,
             ],
         )
