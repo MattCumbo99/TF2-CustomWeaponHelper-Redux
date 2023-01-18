@@ -1,15 +1,16 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {CustomizerComponent} from './pages/customizer/customizer.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: 'main', component: CustomizerComponent },
-  { path: '', component: CustomizerComponent }
+  { path: '', pathMatch: 'full', redirectTo: 'customizer' },
+  { path: '**', redirectTo: '404' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,
+    { enableTracing: false, useHash: false })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
+
 }
