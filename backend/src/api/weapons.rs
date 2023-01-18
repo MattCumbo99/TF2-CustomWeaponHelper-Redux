@@ -4,13 +4,25 @@ use rocket::{http::Status, serde::json::Json, State};
 
 use crate::data::model::Weapon;
 
-#[get("/weapon?<index>")]
-pub async fn get_weapon(connection: &State<Client>, index: i32) -> Result<Json<Weapon>, Status> {
+/// Returns the weapon with that index value
+///
+/// # Arguments
+///
+/// * 'connection' - The Client State that contains the database connection
+/// * 'index' - The index of the weapon you want to get
+///
+/// # Examples
+///
+/// base_route/weapon/5
+/// base_route/weapon/255
+///
+#[get("/weapon/<id>")]
+pub async fn get_weapon(connection: &State<Client>, id: i32) -> Result<Json<Weapon>, Status> {
     let weapons: Collection<Weapon> = connection
         .database("TF2-Custom-Weapon-Helper")
         .collection("Weapons");
     let filter = doc! {
-        "index": index,
+        "index": id,
     };
     let find = weapons.find_one(filter, None).await;
     match find {
@@ -23,54 +35,20 @@ pub async fn get_weapon(connection: &State<Client>, index: i32) -> Result<Json<W
     }
 }
 
-#[get("/weapons/user/<class>")]
-pub async fn get_weapons_by_class(
-    connection: &State<Client>,
-    class: String,
-) -> Result<Json<Vec<Weapon>>, Status> {
-    let weapons: Collection<Weapon> = connection
-        .database("TF2-Custom-Weapon-Helper")
-        .collection("Weapons");
-    let filter = doc! {
-        "user": class,
-    };
-    let find = weapons.find(filter, None).await;
-    match find {
-        Ok(cursor) => match cursor.try_collect::<Vec<Weapon>>().await {
-            Ok(list) => Ok(Json(list)),
-            Err(error) => {
-                debug!("Error: {}", error);
-                Err(Status::InternalServerError)
-            }
-        },
-        Err(error) => {
-            debug!("Error: {}", error);
-            Err(Status::ServiceUnavailable)
-        }
-    }
-}
-
-#[get("/weapons/slot/<slot>")]
-pub async fn get_weapons_by_slot(
-    connection: &State<Client>,
-    slot: i32,
-) -> Result<Json<Vec<Weapon>>, Status> {
-    let weapons: Collection<Weapon> = connection
-        .database("TF2-Custom-Weapon-Helper")
-        .collection("Weapons");
-    let filter = doc! {
-        "slot": slot,
-    };
-    let find = weapons.find(filter, None).await;
-    match find {
-        Ok(cursor) => match cursor.try_collect::<Vec<Weapon>>().await {
-            Ok(list) => Ok(Json(list)),
-            _ => Err(Status::InternalServerError),
-        },
-        _ => Err(Status::ServiceUnavailable),
-    }
-}
-
+/// Returns a list of weapons that match both the class and slot given
+///
+/// # Arguments
+/// 
+/// * 'connection' - The Client State that contains the database connection
+/// * 'slot' - A number that represents the equipable slot
+/// * 'class' - A string that represents the desired user
+/// 
+/// # Examples
+/// 
+/// base_route/weapons?slot=1&class=medic
+/// base_route/weapons?slot=5
+/// base_route/weapons?class=demoman
+/// 
 #[get("/weapons?<slot>&<class>")]
 pub async fn get_weapons_by_class_and_slot(
     connection: &State<Client>,
@@ -80,12 +58,28 @@ pub async fn get_weapons_by_class_and_slot(
     let weapons: Collection<Weapon> = connection
         .database("TF2-Custom-Weapon-Helper")
         .collection("Weapons");
-    let filter = doc! {
-        "slot": slot,
-        "user": class,
+    let filter = match (slot, class) {
+        (None, None) => {
+            doc! {}
+        },
+        (None, Some(class)) => {
+            doc! {
+                "user": class,
+            }
+        },
+        (Some(slot), None) => {
+            doc! {
+                "slot": slot,
+            }
+        },
+        (Some(slot), Some(class)) => {
+            doc! {
+                "slot": slot,
+                "user": class,
+            }
+        },
     };
-    let find = weapons.find(filter, None).await;
-    match find {
+    match weapons.find(filter, None).await {
         Ok(cursor) => match cursor.try_collect::<Vec<Weapon>>().await {
             Ok(list) => Ok(Json(list)),
             _ => Err(Status::InternalServerError),
