@@ -18,6 +18,7 @@ use crate::data::model::Weapon;
 ///
 #[get("/weapon/<id>")]
 pub async fn get_weapon(connection: &State<Client>, id: i32) -> Result<Json<Weapon>, Status> {
+
     let weapons: Collection<Weapon> = connection
         .database("TF2-Custom-Weapon-Helper")
         .collection("Weapons");
