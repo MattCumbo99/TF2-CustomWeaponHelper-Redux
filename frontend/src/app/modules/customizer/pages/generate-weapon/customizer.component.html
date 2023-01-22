@@ -9,35 +9,65 @@
 <body>
   <h1>TF2 Weapon Helper</h1>
   <p>Input your desired weapon information and watch it generate its PHP code below.</p>
-  <form>
+  <form [formGroup]="weaponForm">
     <mat-tab-group>
       <mat-tab label="Weapon Data">
-        <!-- Basic form input for weapon -->
+          <!-- Basic form input for weapon -->
           <div>
             <mat-form-field>
               <mat-label>Weapon Name</mat-label>
-              <input matInput>
+              <input formControlName="weaponName" matInput>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Plugin Index</mat-label>
+              <input formControlName="weaponPluginIndex" (ngModelChange)="changedWeaponPluginIndex($event)" matInput type="number" min="0">
             </mat-form-field>
           </div>
+
           <div>
             <mat-form-field>
               <mat-label>Weapon Class</mat-label>
-              <input matInput placeholder="tf_weapon_scattergun">
+              <input formControlName="weaponClass" (ngModelChange)="changedWeaponClass($event)" matInput placeholder="tf_weapon_scattergun">
             </mat-form-field>
+
             <mat-form-field>
               <mat-label>Index</mat-label>
-              <input matInput type="number">
+              <input formControlName="weaponIndex" (ngModelChange)="changedWeaponIndex($event)" matInput type="number" min="0">
             </mat-form-field>
+
             <mat-form-field>
               <mat-label>Slot</mat-label>
-              <input matInput min="0" type="number">
+              <mat-select formControlName="weaponSlot" (ngModelChange)="changedWeaponSlot($event)">
+                <mat-option *ngFor="let slot of SlotEnum | enumToArray; let i = index" [value]="i">
+                  {{ slot }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </div>
+
           <div>
-            <!-- Sample button -->
-            <button mat-raised-button type="button">Generate</button>
+            <mat-form-field>
+              <mat-label>Quality</mat-label>
+              <mat-select formControlName="weaponQuality" (ngModelChange)="changedWeaponQuality($event)">
+                <mat-option *ngFor="let quality of QualityEnum | enumToArray; let i = index" [value]="i">
+                  {{ quality }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Level</mat-label>
+              <input formControlName="weaponLevel" (ngModelChange)="changedWeaponLevel($event)" matInput type="number" min="0" max="100">
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Ammo</mat-label>
+              <input formControlName="weaponAmmo" (ngModelChange)="changedWeaponAmmo($event)" matInput type="number" min="0">
+            </mat-form-field>
           </div>
       </mat-tab>
+
       <mat-tab label="Attributes">
           <!-- Attribute Form -->
           <div>
@@ -53,10 +83,7 @@
     </mat-tab-group>
     <div>
       <!-- PHP code results -->
-      <mat-form-field class="php-output" >
-        <mat-label>Result</mat-label>
-        <textarea matInput disabled></textarea>
-      </mat-form-field>
+      <textarea class="php-output" formControlName="phpCode" matInput rows="15" cols="75" readonly></textarea>
     </div>
   </form>
 </body>

@@ -9,6 +9,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { CustomizerComponent } from './pages/generate-weapon/customizer.component';
 import { CustomizerRoutingModule } from './customizer-routing.module';
+import { ReactiveFormsModule } from "@angular/forms";
+import { EnumToArrayPipe } from "../../shared/pipes/enumtoarray-pipe";
 
 @NgModule({
     imports: [
@@ -21,11 +23,13 @@ import { CustomizerRoutingModule } from './customizer-routing.module';
         MatSelectModule,
         MatTabsModule,
         MatTableModule,
+        ReactiveFormsModule,
     ],
     declarations: [
         CustomizerComponent,
+        EnumToArrayPipe
     ],
-    exports: [CustomizerComponent]
+    exports: []
 })
 export class CustomizerModule {
 
