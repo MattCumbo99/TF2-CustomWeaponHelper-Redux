@@ -8,5 +8,5 @@ export type AttributeType = {
   description: string;
   valueType: ValueTypeEnum;
   hidden: boolean;
-  customValue: number;
+  customValue?: number;
 }

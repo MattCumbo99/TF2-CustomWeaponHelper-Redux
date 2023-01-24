@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { CustomWeaponModel } from "../../../../shared/models/customweapon-model";
 import { QualityEnum } from "../../../../shared/enums/quality-enum";
 import { SlotEnum } from "../../../../shared/enums/slot-enum";
+import { AttributeType } from "../../../../shared/models/attribute-type";
+import { EffectEnum } from "../../../../shared/enums/effect-enum";
+import { ValueTypeEnum } from "../../../../shared/enums/valuetype-enum";
 
 @Component({
   selector: 'app-customizer',
@@ -10,6 +13,13 @@ import { SlotEnum } from "../../../../shared/enums/slot-enum";
   styleUrls: ['./customizer.component.sass']
 })
 export class CustomizerComponent {
+
+  // Sample data
+  attributes: AttributeType[] = [
+    { id: 1, name: "Damage Penalty", description: "%s1% damage penalty", effect: EffectEnum.Negative, customValue: 0, valueType: ValueTypeEnum.Percentage, hidden: false }
+  ];
+
+  attributeTableColumns: string[] = ['id', 'name', 'description'];
 
   QualityEnum = QualityEnum;
   SlotEnum = SlotEnum;
